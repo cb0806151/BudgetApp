@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Budget App</title>
+</head>
+<body class="w-100 text-center">
+    <div id="container" class="card w-100 text-center m-auto list-group">
+
+        <div class="card-body list-group-item">
+            <input type="text" placeholder="Enter a New Budget Category" id="new_category_name" class="col-10 float-left d-inline btn border-primary text-left">
+            <h3 id="add_new_category" class="col-2 btn btn-outline-primary"><b>+</b></h3>
+        </div>
+        <div id="budget_categories" class="card-body list-group-item">    
+            <h3 id="empty_message">Add in some Categories to Start Budgeting!</h3>
+        </div>
+        <div class="card-body list-group-item">
+            <h3 class="d-inline float-left">Total:</h3>
+            <h3 class="d-inline float-right" id="total_label">$0.00</h3>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
