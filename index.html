@@ -9,17 +9,17 @@
 </head>
 <body class="w-100 text-center">
     <div id="container" class="card w-100 text-center m-auto list-group">
-
         <div class="card-body list-group-item">
-            <input type="text" placeholder="Enter a New Budget Category" id="new_category_name" class="col-10 float-left d-inline btn border-primary text-left">
+            <input type="text" placeholder="Enter a New Budget Category" id="new_category_name" on class="col-10 float-left d-inline btn border-primary text-left">
             <h3 id="add_new_category" class="col-2 btn btn-outline-primary"><b>+</b></h3>
         </div>
+
         <div id="budget_categories" class="card-body list-group-item">    
-            <h3 id="empty_message">Add in some Categories to Start Budgeting!</h3>
+            <h5 id="empty_message" class="d-block">Add in some Categories to Start Budgeting!</h5>
         </div>
         <div class="card-body list-group-item">
             <h3 class="d-inline float-left">Total:</h3>
-            <h3 class="d-inline float-right" id="total_label">$0.00</h3>
+            <h3 class="d-inline float-right text-success" id="total_label">$0.00</h3>
         </div>
     </div>
     <script src="script.js"></script>
