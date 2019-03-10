@@ -1,12 +1,14 @@
 var budget = {};
 var totalEntries = {}
 var theTotal = 0;
+var entriesNegative = false;
 var newCategoryName = document.getElementById("new_category_name");
 var addNewCategoryField = document.getElementById("add_new_category");
 var budgetCategories = document.getElementById("budget_categories");
 var totalLabel = document.getElementById("total_label");
 var emptyBudgetMessage = document.getElementById("empty_message");
 var entryFields = document.getElementsByClassName("entry-fields");
+var setEntriesDefault = document.getElementById("entries_default");
 
 addNewCategoryField.addEventListener("click", function(){
     addNewCategory();             
@@ -57,9 +59,6 @@ function addNewEntry(category) {
         let entryIndex = budget[category].length;
         let entryColor = "text-danger"
         let visibility = 'd-block';
-        if (entry > 0) {
-            entryColor = "text-success"
-        }
 
         if (document.getElementsByClassName(category + "-class")[0] != undefined) {
             if (document.getElementsByClassName(category + "-class")[0].classList.contains("d-none")) {
@@ -67,7 +66,15 @@ function addNewEntry(category) {
             }
         }
 
-        budget[category].push(parseFloat(entry));
+        if (entriesNegative && (String(categoryInput.value).indexOf("+") < 0)) {
+            entry = entry * -1;
+        }
+
+        if (entry > 0) {
+            entryColor = "text-success"
+        }
+
+        budget[category].push(entry);
         totalEntries[category + "Size"] += 1;
         entry = formatAmounts(entry);
         document.getElementById(category + "_entries").innerHTML += `<li class="list-group-item text-right ${category}-class ${visibility}" id="${category}${entryIndex}"><b class="float-left d-inline btn btn-outline-danger" onclick="deleteEntry(${entryIndex}, '${category}')">X</b><b class="btn ${entryColor}">${entry}</b></li>`;
@@ -101,7 +108,7 @@ function calculateTotal() {
         document.getElementById(value + "_total").innerHTML = `<b class="float-left">Total:</b>${localTotal}`
         localTotal = 0;  
     }
-    console.log(theTotal >=0);
+
     if (theTotal >= 0) {
         totalLabel.classList.replace("text-danger", "text-success");
     } else {
@@ -112,13 +119,30 @@ function calculateTotal() {
     totalLabel.innerHTML = theTotal;
 }
 
+setEntriesDefault.addEventListener("click", function(){
+    if (entriesNegative) {
+        entriesNegative = false;
+    } else {
+        entriesNegative = true;
+    }
+});
+
 function deleteCategory(category) {
     if (confirm("Are you sure you want to delete this category")) {
         thisCategory = document.getElementById(category + "_category");
         thisCategory.parentNode.removeChild(thisCategory);   
         delete budget[category]; 
 
+        if (Object.keys(budget).length < 1){
+            document.getElementById("empty_message").classList.replace("d-none", "d-block");
+        }
         calculateTotal();
+    }
+}
+
+function toggleEmptyMessage() {   
+    if (Object.keys(budget).length < 1){
+        document.getElementById("empty_message").classList.replace("d-none", "d-block");
     }
 }
 
