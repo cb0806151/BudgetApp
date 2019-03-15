@@ -1,72 +1,63 @@
 var budget = {};
 var totalEntries = {}
 var theTotal = 0;
-var entriesNegative = false;
-var newCategoryName = document.getElementById("new_category_name");
-var addNewCategoryField = document.getElementById("add_new_category");
-var budgetCategories = document.getElementById("budget_categories");
-var totalLabel = document.getElementById("total_label");
-var emptyBudgetMessage = document.getElementById("empty_message");
-var entryFields = document.getElementsByClassName("entry-fields");
-var setEntriesDefault = document.getElementById("entries_default");
+var entriesNegative = false;  
 
-addNewCategoryField.addEventListener("click", function(){
+$('#add_new_category').click(()=> {
     addNewCategory();             
 });
 
-newCategoryName.addEventListener("keyup", function(e){
-    if (e.key === "Enter") {
+$('#new_category_name').keyup((e)=>{
+    if (e.which === 13) {
         addNewCategory();      
     }       
 });
 
-function setEventListenersForEntryFields() {
-    for (i=0; i<entryFields.length; i++) {
-        entryFields[i].addEventListener("keyup", function(e){
-            if (e.key === "Enter") {
-                addNewEntry(this.placeholder);     
+function setEventListenersForEntryFields(category) {
+        $("#" + category + "_name").keyup(function(e){
+            if (e.which === 13) {
+                addNewEntry(category);     
             }  
         });
-    }
 }
 
 function addNewCategory() {
-    if (emptyBudgetMessage.classList.contains = "d-block"){
-        emptyBudgetMessage.classList.replace("d-block", "d-none");
+    let category = $('#new_category_name').val();
+    if ($('#empty_message').hasClass = "d-block"){
+        $('#empty_message').removeClass("d-none").addClass("d-block");
 
     }
-    budget[newCategoryName.value] = [];
-    totalEntries[newCategoryName.value + "Size"] = 0;    
-    budgetCategories.innerHTML += `<div id="${newCategoryName.value + "_category"}">
+    budget[category] = [];
+    totalEntries[category + "Size"] = 0;    
+    $('#budget_categories').append(`<div id="${category + "_category"}">
                                     <div class="row mb-1">
-                                    <input type="text" placeholder="${newCategoryName.value}" id="${newCategoryName.value + "_name"}" class="col-7 float-left d-inline btn border-primary text-left entry-fields">
-                                    <h3 class="col-2 btn btn-outline-primary m-0" id="${newCategoryName.value}" onclick="addNewEntry(id)"><b>+</b></h3>
-                                    <h3 class="col-3 btn btn-outline-danger m-0" onclick="deleteCategory('${newCategoryName.value}')"><b>Delete</b></h3>
+                                    <input type="text" placeholder="${category}" id="${category + "_name"}" class="col-7 float-left d-inline btn border-primary text-left entry-fields">
+                                    <h3 class="col-2 btn btn-outline-primary m-0" id="${category}" onclick="addNewEntry(id)"><b>+</b></h3>
+                                    <h3 class="col-3 btn btn-outline-danger m-0" onclick="deleteCategory('${category}')"><b>Delete</b></h3>
                                     </div>
-                                    <ul class="list-group w-100 mb-3" id="${newCategoryName.value + "_entries"}">
-                                    <li class="list-group-item text-right" id="${newCategoryName.value + "_total"}" onclick="toggleHideEntries('${newCategoryName.value}')"><b class="float-left">Total:</b>0.00</li>
+                                    <ul class="list-group w-100 mb-3" id="${category + "_entries"}">
+                                    <li class="list-group-item text-right" id="${category + "_total"}" onclick="toggleHideEntries('${category}')"><b class="float-left">Total:</b>0.00</li>
                                     </ul>
-                                    </div>`
-    newCategoryName.value = "";  
-
-    setEventListenersForEntryFields();
+                                    </div>`)
+    $('#new_category_name').val("");  
+    setEventListenersForEntryFields(category);
 }
 
 function addNewEntry(category) {
-    let categoryInput = document.getElementById(category + "_name")
-    let entry = parseFloat(categoryInput.value);
+    let categoryInput = $("#" + category + "_name");
+    let entry = parseFloat(categoryInput.val());
     if (!isNaN(entry)) {
         let entryIndex = budget[category].length;
         let entryColor = "text-danger"
         let visibility = 'd-block';
 
-        if (document.getElementsByClassName(category + "-class")[0] != undefined) {
-            if (document.getElementsByClassName(category + "-class")[0].classList.contains("d-none")) {
+        if ($("." + category + "-class").eq(0) != undefined) {
+            if ($("." + category + "-class").eq(0).hasClass("d-none")) {
                 visibility = "d-none";
             }
         }
 
-        if (entriesNegative && (String(categoryInput.value).indexOf("+") < 0)) {
+        if (entriesNegative && (String(categoryInput.val()).indexOf("+") < 0)) {
             entry = entry * -1;
         }
 
@@ -77,11 +68,11 @@ function addNewEntry(category) {
         budget[category].push(entry);
         totalEntries[category + "Size"] += 1;
         entry = formatAmounts(entry);
-        document.getElementById(category + "_entries").innerHTML += `<li class="list-group-item text-right ${category}-class ${visibility}" id="${category}${entryIndex}"><b class="float-left d-inline btn btn-outline-danger" onclick="deleteEntry(${entryIndex}, '${category}')">X</b><b class="btn ${entryColor}">${entry}</b></li>`;
-        categoryInput.value = ""
+        $("#" + category + "_entries").append(`<li class="list-group-item text-right ${category}-class ${visibility}" id="${category}${entryIndex}"><b class="float-left d-inline btn btn-outline-danger" onclick="deleteEntry(${entryIndex}, '${category}')">X</b><b class="btn ${entryColor}">${entry}</b></li>`);
+        categoryInput.val("")
         calculateTotal();
     } else {
-        categoryInput.value = ""
+        categoryInput.val("")
         alert("Please enter a valid number");
     }
 }
@@ -89,8 +80,8 @@ function addNewEntry(category) {
 function deleteEntry(entry, category) {
     budget[category][entry] = 0;
 
-    thisEntry = document.getElementById(category + entry);
-    thisEntry.parentNode.removeChild(thisEntry);
+    stringer = "#" + category + entry
+    $("#" + category + entry).remove(stringer);
     
     totalEntries[category + "Size"] -= 1;
     calculateTotal();
@@ -105,21 +96,21 @@ function calculateTotal() {
             localTotal += entry;
         });   
         localTotal = formatAmounts(localTotal);
-        document.getElementById(value + "_total").innerHTML = `<b class="float-left">Total:</b>${localTotal}`
+        $("#" + value + "_total").html(`<b class="float-left">Total:</b>${localTotal}`);
         localTotal = 0;  
     }
 
     if (theTotal >= 0) {
-        totalLabel.classList.replace("text-danger", "text-success");
+        $('#total_label').addClass("text-success").removeClass("text-danger");
     } else {
-        totalLabel.classList.replace("text-success", "text-danger");
+        $('#total_label').addClass("text-danger").removeClass("text-success");
     }
     theTotal = formatAmounts(theTotal);   
 
-    totalLabel.innerHTML = theTotal;
+    $('#total_label').html(theTotal);
 }
 
-setEntriesDefault.addEventListener("click", function(){
+$('#entries_default').click(()=>{
     if (entriesNegative) {
         entriesNegative = false;
     } else {
@@ -129,32 +120,26 @@ setEntriesDefault.addEventListener("click", function(){
 
 function deleteCategory(category) {
     if (confirm("Are you sure you want to delete this category")) {
-        thisCategory = document.getElementById(category + "_category");
-        thisCategory.parentNode.removeChild(thisCategory);   
+        thisCategory = "#" + category + "_category";
+        $(thisCategory).remove(thisCategory);   
         delete budget[category]; 
 
         if (Object.keys(budget).length < 1){
-            document.getElementById("empty_message").classList.replace("d-none", "d-block");
+            $("empty_message").addClass("d-block").removeClass("d-none");
         }
         calculateTotal();
     }
 }
 
-function toggleEmptyMessage() {   
-    if (Object.keys(budget).length < 1){
-        document.getElementById("empty_message").classList.replace("d-none", "d-block");
-    }
-}
-
 function toggleHideEntries(category) {
-    let entries = document.getElementsByClassName(category + "-class");
-    if (entries[0].classList.contains("d-none")) {
-        for (i=0; i<entries.length; i++) {
-            entries[i].classList.replace("d-none", "d-block");
+    let entries = $("." + category + "-class");
+    if (entries.eq(0).hasClass("d-none")) {
+        for (i=0; i<entries.size(); i++) {
+            entries.eq(i).addClass("d-block").removeClass("d-none");
         }
     } else {
-        for (i=0; i<entries.length; i++) {
-            entries[i].classList.replace("d-block", "d-none");
+        for (i=0; i<entries.size(); i++) {
+            entries.eq(i).addClass("d-none").removeClass("d-block");
         }       
     }
 }
