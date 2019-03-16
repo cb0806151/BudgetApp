@@ -23,8 +23,8 @@ function setEventListenersForEntryFields(category) {
 
 function addNewCategory() {
     let category = $('#new_category_name').val();
-    if ($('#empty_message').hasClass = "d-block"){
-        $('#empty_message').removeClass("d-none").addClass("d-block");
+    if ($('#empty_message').hasClass("d-block")){
+        $('#empty_message').removeClass("d-block").addClass("d-none");
 
     }
     budget[category] = [];
@@ -36,7 +36,7 @@ function addNewCategory() {
                                     <h3 class="col-3 btn btn-outline-danger m-0" onclick="deleteCategory('${category}')"><b>Delete</b></h3>
                                     </div>
                                     <ul class="list-group w-100 mb-3" id="${category + "_entries"}">
-                                    <li class="list-group-item text-right" id="${category + "_total"}" onclick="toggleHideEntries('${category}')"><b class="float-left">Total:</b>0.00</li>
+                                    <li class="list-group-item text-right" id="${category + "_total"}"><b class="btn btn-outline-primary float-left" onclick="toggleHideEntries('${category}')">Toggle Display</b><b class="float-left btn">Total:</b><span class="btn">0.00</span></li>
                                     </ul>
                                     </div>`)
     $('#new_category_name').val("");  
@@ -57,7 +57,7 @@ function addNewEntry(category) {
             }
         }
 
-        if (entriesNegative && (String(categoryInput.val()).indexOf("+") < 0)) {
+        if (entriesNegative && (String(categoryInput.val()).indexOf("+") < 0) && (String(categoryInput.val()).indexOf("-") < 0)) {
             entry = entry * -1;
         }
 
@@ -96,7 +96,7 @@ function calculateTotal() {
             localTotal += entry;
         });   
         localTotal = formatAmounts(localTotal);
-        $("#" + value + "_total").html(`<b class="float-left">Total:</b>${localTotal}`);
+        $("#" + value + "_total").html(`<b class="btn btn-outline-primary float-left" onclick="toggleHideEntries('${value}')">Toggle Display</b><b class="float-left btn">Total:</b><span class="btn">${localTotal}</span>`);
         localTotal = 0;  
     }
 
@@ -125,7 +125,7 @@ function deleteCategory(category) {
         delete budget[category]; 
 
         if (Object.keys(budget).length < 1){
-            $("empty_message").addClass("d-block").removeClass("d-none");
+            $("#empty_message").addClass("d-block").removeClass("d-none");
         }
         calculateTotal();
     }
@@ -134,11 +134,11 @@ function deleteCategory(category) {
 function toggleHideEntries(category) {
     let entries = $("." + category + "-class");
     if (entries.eq(0).hasClass("d-none")) {
-        for (i=0; i<entries.size(); i++) {
+        for (i=0; i<entries.length; i++) {
             entries.eq(i).addClass("d-block").removeClass("d-none");
         }
     } else {
-        for (i=0; i<entries.size(); i++) {
+        for (i=0; i<entries.length; i++) {
             entries.eq(i).addClass("d-none").removeClass("d-block");
         }       
     }
