@@ -7,11 +7,15 @@ $('#add_new_category').click(()=> {
     addNewCategory();             
 });
 
+var hello = "there"
+
 $('#new_category_name').keyup((e)=>{
     if (e.which === 13) {
         addNewCategory();      
     }       
 });
+
+var whats = "up"
 
 function setEventListenersForEntryFields(category) {
         $("#" + category + "_name").keyup(function(e){
